@@ -1,0 +1,63 @@
+/* This is a Javascript designed to retrieve parameters from the url or the client cookies.  
+  These parameters are key for conversion attribution in Google Ads.
+  This script searches for the 'wbraid' either in the url, 1p cookies or 3p cookies. 
+  The generation of this script was assisted by AI - Chat GPT. 
+*/
+
+<script>
+function() {
+  var COOKIE_NAME = '_ss_wbraid';
+  var COOKIE_EXPIRE_DAYS = 30;
+
+  function setCookie(name, value, days) {
+    var d = new Date();
+    d.setTime(d.getTime() + days*24*60*60*1000);
+    document.cookie = name + "=" + value + "; path=/; max-age=" + (days*24*60*60) + "; SameSite=Lax";
+  }
+
+  function getCookie(name) {
+    var cookies = document.cookie.split(';');
+    for (var i=0;i<cookies.length;i++){
+      var c = cookies[i].trim();
+      if(c.indexOf(name + '=') === 0) return c.substring((name+'=').length);
+    }
+    return null;
+  }
+
+  function getFromUrl(param) {
+    return new URLSearchParams(window.location.search).get(param);
+  }
+
+  // Looks for the value in the URL
+  var value = getFromUrl('wbraid');
+  if (value) {
+    setCookie(COOKIE_NAME, value, COOKIE_EXPIRE_DAYS);
+    return value;
+  }
+
+  // Looks for the value in a 1p cookie
+  value = getCookie(COOKIE_NAME);
+  if (value) return value;
+
+  // Looks for the value in a 3p cookie
+  var gclCookies = ['_gcl_wb','GCL_WB_P'];
+  for (var i=0;i<gclCookies.length;i++){
+    var c = getCookie(gclCookies[i]);
+    if(c){
+      var parts = c.split('.');
+      if(parts.length >=3) return parts[2].trim();
+    }
+  }
+
+  // FPGCLWB fallback
+  var fpgVal = getCookie('FPGCLWB');
+  if(fpgVal){
+    var left = fpgVal.split('$i')[0];
+    var parts = left.split('.');
+    var last = parts[parts.length-1].replace(/^k/,'').trim();
+    if(last) return last;
+  }
+
+  return undefined;
+}
+</script>
