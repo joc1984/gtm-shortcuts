@@ -1,0 +1,1 @@
+This repository gathers a collection of scripts designed to support learning and experimentation in the field of digital analytics. The goal is to offer clear, practical examples that help students and practitioners understand key concepts, explore different tools, and apply analytics techniques in real scenarios.
