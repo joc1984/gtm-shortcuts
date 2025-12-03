@@ -30,18 +30,18 @@ function() {
     return new URLSearchParams(window.location.search).get(param);
   }
 
-  // 1️⃣ URL
+  // Looks for the value in the URL
   var value = getFromUrl('gclid');
   if (value) {
     setCookie(COOKIE_NAME, value, COOKIE_EXPIRE_DAYS);
     return value;
   }
 
-  // 2️⃣ Cookie propia
+  // Looks for the value in a 1p cookie
   value = getCookie(COOKIE_NAME);
   if (value) return value;
 
-  // 3️⃣ Google cookies _gcl_aw / GCL_AW_P
+  // Looks for the value in a 3p cookie
   var gclCookies = ['_gcl_aw','GCL_AW_P'];
   for (var i=0;i<gclCookies.length;i++){
     var c = getCookie(gclCookies[i]);
@@ -51,7 +51,7 @@ function() {
     }
   }
 
-  // 4️⃣ FPGCLAW fallback
+  // FPGCLAW fallback
   var fpgVal = getCookie('FPGCLAW');
   if(fpgVal){
     var left = fpgVal.split('$i')[0];
