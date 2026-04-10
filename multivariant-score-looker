@@ -1,0 +1,20 @@
+CASE
+WHEN SUM(web_page_view) > 5000
+ AND ( (3*SUM(IFNULL(Conversion1,0)) + 1*SUM(IFNULL(Conversion2,0))) / SUM(web_page_session) > 0.1 )
+THEN 'Category1'
+
+WHEN (SUM(web_page_view) > 1000 AND SUM(web_page_view) < 5000)
+ AND ( (3*SUM(IFNULL(Conversion1,0)) + 1*SUM(IFNULL(Conversion2,0))) / SUM(web_page_session) > 0.01 )
+THEN 'Category2'
+
+WHEN SUM(web_page_view) > 5000
+ AND ( (3*SUM(IFNULL(Conversion1,0)) + 1*SUM(IFNULL(Conversion2,0))) / SUM(web_page_session)
+       BETWEEN 0.01 AND 0.1 )
+THEN 'Category3'
+
+WHEN SUM(web_page_view) > 5000
+ AND ( (3*SUM(IFNULL(Conversion1,0)) + 1*SUM(IFNULL(Conversion2,0))) / SUM(web_page_session) < 0.01 )
+THEN 'Category4'
+
+ELSE 'Average'
+END
