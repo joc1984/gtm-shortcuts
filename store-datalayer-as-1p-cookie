@@ -1,0 +1,51 @@
+<script>
+	function cookieReducer(r, v) {
+		var parts = v.split('=');
+		return parts[0] === cookieNameTest ? decodeURIComponent(parts[1]) : r
+	}
+
+	if (window.dataLayer && 
+	    window.dataLayer[0].DLvalue1 !== undefined && 
+	    window.dataLayer[0].DLvalue2 !== undefined){
+
+		var stack_limit = 1;
+		var cookieNameTest = "testing_cookie";
+		var expires = new Date(Date.now() + 20 * 60000).toUTCString();
+
+		var currentTest = window.dataLayer[0].DLvalue1 + "." + window.dataLayer[0].DLvalue2;
+		var cookieTest = document.cookie.split('; ').reduce(cookieReducer, '');
+
+		if (cookieTest !== '') {
+			var stackArray = cookieTest.split(" > ");
+
+			for (var i = 0; i < stackArray.length; i++) {
+				if (stackArray[i] === "" || stackArray[i] == "undefined") {
+					stackArray.splice(i, 1);
+				}
+			}
+
+			if (stackArray.slice(-1)[0] !== currentTest){
+				stackArray.push(currentTest);
+			}
+
+			if (stackArray.length > stack_limit) {
+				stackArray.shift();
+			}
+
+			document.cookie = cookieNameTest + '=' + 
+				encodeURIComponent(stackArray.join(" > ")) + 
+				'; expires=' + expires + 
+				'; domain=.' + location.hostname.split('.').reverse()[1] + '.' +
+				location.hostname.split('.').reverse()[0] + 
+				'; path=/';
+
+		} else {
+			document.cookie = cookieNameTest + '=' + 
+				encodeURIComponent(currentTest) + 
+				'; expires=' + expires + 
+				'; domain=.' + location.hostname.split('.').reverse()[1] + '.' +
+				location.hostname.split('.').reverse()[0] + 
+				'; path=/';
+		}
+	}
+</script>
